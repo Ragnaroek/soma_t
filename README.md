@@ -1,2 +1,2 @@
 # soma_t
-text mode 💕
+💕 text mode 💕
