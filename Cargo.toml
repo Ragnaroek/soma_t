@@ -1,0 +1,8 @@
+[package]
+name = "soma_t"
+version = "0.1.0"
+authors = ["Michael Bohn <spaceodyssey@gmx.de>"]
+license = "GPL-3.0"
+repository = "https://github.com/Ragnaroek/soma_t"
+
+[dependencies]

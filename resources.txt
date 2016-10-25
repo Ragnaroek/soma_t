@@ -1,0 +1,6 @@
+http://www.termsys.demon.co.uk/vtansi.htm
+http://man-ascii.com/
+http://wiki.bash-hackers.org/scripting/terminalcodes
+
+XTerm Control Sequences:
+http://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Functions-using-CSI-_-ordered-by-the-final-character_s_
