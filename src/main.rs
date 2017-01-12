@@ -1,4 +1,5 @@
 mod vector;
+mod geometry;
 
 use std::io;
 use std::io::Write;
@@ -37,23 +38,14 @@ fn main() {
 
     //fov scale
     let fov_scale =  FOV.to_radians().tan();
-    let aspect_ration = (FRAME_WIDTH / FRAME_HEIGHT) as f32;
+    let aspect_ratio = (FRAME_WIDTH / FRAME_HEIGHT) as f32;
 
     for x in 0..FRAME_WIDTH {
         for y in 0..FRAME_HEIGHT {
 
-            // *_screen is now in NDC
-            // do we need the mapping to screen space [-1,1]? => omit?
-            let x_screen = ((x as f32) + 0.5) / (FRAME_WIDTH as f32);
-            let y_screen = ((y as f32) + 0.5) / (FRAME_WIDTH as f32);
+            let x_screen = ((x as f32) + 0.5) / (FRAME_WIDTH as f32) * aspect_ratio * fov_scale;
+            let y_screen = ((y as f32) + 0.5) / (FRAME_WIDTH as f32) * fov_scale;
 
-            /*
-            float x = (2 * (i + 0.5) / (float)options.width - 1) * imageAspectRatio * scale;
-            float y = (1 - 2 * (j + 0.5) / (float)options.height) * scale;
-            */
-            // http://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates
-            // TODO
-            // - compute primary ray direction
             // - check if ray intersects triangle and toggle frame_buffer pixel
         }
     }
