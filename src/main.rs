@@ -2,14 +2,17 @@ mod vector;
 mod geometry;
 
 use std::io;
-use std::io::Write;
+use std::fs::OpenOptions;
+use std::io::{Write, Error};
 
 use vector::Vec3f;
 use geometry::{Object, Triangle};
 
-const FRAME_WIDTH : usize = 220;//120;
-const FRAME_HEIGHT: usize = 53;//30;
+const FRAME_WIDTH : usize = 640;//220;//120;
+const FRAME_HEIGHT: usize = 480;//53;//30;
 const FOV: f32 = 51.52;
+
+const FILE_OUT : bool = true; // TODO program argument
 
 fn draw_buffer(buffer: &[[bool; FRAME_HEIGHT]; FRAME_WIDTH]) {
 
@@ -33,6 +36,29 @@ fn draw_buffer(buffer: &[[bool; FRAME_HEIGHT]; FRAME_WIDTH]) {
     let mut input = String::new();
     let result = io::stdin().read_line(&mut input);
     println!("{:?}", result);
+}
+
+fn write_to_ppm(buffer: &[[bool; FRAME_HEIGHT]; FRAME_WIDTH]) -> Result<(), Error> {
+    let mut o = OpenOptions::new();
+    let fso = o.write(true).create(true);
+    let mut export = try!(fso.open("./render.ppm"));
+    try!(export.write_all(b"P6\n"));
+    try!(export.write_all(format!("{} ", FRAME_WIDTH).as_bytes()));
+    try!(export.write_all(format!("{} ", FRAME_HEIGHT).as_bytes()));
+    try!(export.write_all(b"255\n"));
+
+    for y in 0..FRAME_HEIGHT {
+        for x in 0..FRAME_WIDTH {
+            if buffer[x][y] {
+                try!(export.write_all(&[255, 255, 255]));
+            } else {
+                try!(export.write_all(&[0, 0, 0]));
+            }
+        }
+    }
+
+    try!(export.flush());
+    return Ok(());
 }
 
 fn main() {
@@ -65,5 +91,15 @@ fn main() {
         }
     }
 
-    draw_buffer(&frame_buffer);
+    if FILE_OUT {
+        println!("Writing to ppm file");
+        let result = write_to_ppm(&frame_buffer); // TODO check error
+        if result.is_ok() {
+            println!("Done");
+        } else {
+            println!("Error {:?}", result);
+        }
+    } else {
+        draw_buffer(&frame_buffer);
+    }
 }
